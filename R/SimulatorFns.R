@@ -31,10 +31,22 @@ pastealleles <- function(x) {
   apply(x@micro,MARGIN = 2,FUN = function(y) {paste(y,collapse = ";")})
 }
 
+#' Generate copies of the objects of class "indiv"
+#'
+#' @description Used to simulate asexual/clonal reproduction in a population of individuals of the class "indiv"
+#' @param x Individual to be replicated
 
 asexrep <- function(x) {
   rep(list(x),5)
 }
+
+#' Function to sample the new location of a dispersed individual
+#'
+#' @description This function samples the new position of an individual in the position matrix given the current position of the individual and the dispersal kernel.
+#' @param x Individual of the class "indiv" with a position slot.
+#' @param position Spatial matrix.
+#' @param probability Dispersal kernel. Array of transition probabilities for the movement from each possible slot.
+#' @return Sampled new position within the position matrix given as a parameter.
 
 displacement <- function(x,position,probability) {
   y <- x
@@ -42,30 +54,78 @@ displacement <- function(x,position,probability) {
   return(y)
 }
 
+#' Function to do the recombination of the alleles in a locus
+#'
+#' @description Selects alleles from an individual locus for a n-ploid individual.
+#' @param x "indiv" individual index.
+#' @param size Ploidy level of the individuals.
+#' @param poplist Population list. List of the "indiv" individuals.
+
 recombination <- function(x,size,poplist) {
   apply(rbind(poplist[[x[1]]]@micro,poplist[[x[2]]]@micro), FUN = sample,MARGIN = 2,size=size)
 }
 
+#' Create "indiv" objects from a matrix of microsatellite data.
+#'
+#' @description This function takes a matrix of microsatellite loci and creates an "indiv" object with this information.
+#' @param x Matrix with the microsatellite repetition data.
+#' @param mrows Ploidy level of the population.
+
 addinds <- function(x,mrows) {
   new("indiv",micro=matrix(data=x[1:(length(x)-1)],nrow = mrows),pos=as.integer(x[length(x)]))
 }
+
+#' Insert mutations in microsatellite markers following a step wise mutation model
+#'
+#' @description Inserts a step wise mutation in a microsatellite allele using a binomial probability distribution with the probability specified as the mutationRate parameter.
+#' @param x "indiv" individual where the mutations will be introduced.
+#' @param mutationRate Mutation rate of the microsatellite markers.
 
 insMutations <- function(x,mutationRate) {
   x@micro <- apply(x@micro,MARGIN = c(1,2), FUN = mutmsat, mutrate = mutationRate)
   return(x)
 }
 
+#' Calculates the probability of arrival by distance
+#'
+#' @description This functions returns the cumulative probability of dispersal from the quadrant x to the quadrant y. This function uses a normal probability distribution with mu = 0 and sigma = 3.
+#' @param x Origin of the displacement.
+#' @param y Arrival of the displacement.
+#' @return Cumulative probability of arrival from x to y given a normal probability distribution.
+
 eucprob <- function(x,y) {
   return(dnorm((sqrt(sum((x-y)^2))),mean=0,sd=3))
 }
+
+#' Calculate the probability of dispersal to each slot
+#'
+#' @description This function uses the eucprob function to calculate the probability density contained in each slot depending on each origin site.
+#' @param i Initial quadrant
+#' @param j Arrival quadrant
+#' @param mat Position matrix where the individuals are located
+#' @return The probability of dispersal from a site i to all possible quadrants of the defined position grid
 
 distint <- function(i,j,mat) {
   return(eucprob(which(mat == i, arr.ind = TRUE),which(mat == j, arr.ind = TRUE)))
 }
 
+#' Calculate the probability of dispersal from each initial quadrant to each possible quadrant
+#'
+#' @description This function calculates the probabilities of displacement from an x quadrant to every other quadrant in the grid.
+#' @param x The quadrant of origin.
+#' @param mat The probability matrix of the displacement rates.
+#' @return It returns an array of probabilities of displacement from each of the possible origin quadrants.
+
 distmat <- function(x, mat) {
   apply(mat,MARGIN = c(1,2),FUN = distint, j = x, mat=mat)
 }
+
+#' Obtains the position of a descendant individual from a sexual crossing
+#'
+#' @description After a sexual recombination, this function is used to obtain the location of the parental that is the place where the descendant individual appears.
+#' @param x Parental individual.
+#' @param elList Population list where all the individuals are stored.
+#' @return It returns the position of the parent x.
 
 posRecomb <- function(x,elList) {
   elList[[x[1]]]@pos
