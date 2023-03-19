@@ -152,8 +152,6 @@ posRecomb <- function(x,elList) {
 #' @param grid Integer vector. Dimensions of the spatial grid where the populations occurs.
 #' @param printAnc Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.
 #' @returns A Genind object containing the simulated population.
-#' @examples
-#' your_population <- evoSim_se(n=100, msat=13, ploidy=3, sexprob=0.1, mutrat=0.0001, grid = c(10,10)) \dontrun{}
 #' @export
 
 evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, grid=c(10,10), printAnc = FALSE) {
