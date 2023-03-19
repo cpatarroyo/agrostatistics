@@ -2,7 +2,7 @@
 % Please edit documentation in R/SimulatorFns.R
 \name{mutmsat}
 \alias{mutmsat}
-\title{Introduce stepwise mutations to a microsatellite marker}
+\title{Introduce step wise mutations to a microsatellite marker}
 \usage{
 mutmsat(y, mutrate)
 }

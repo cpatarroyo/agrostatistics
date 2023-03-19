@@ -7,7 +7,7 @@
 
 setClass("indiv",slots = list(micro="matrix",pos="integer"))
 
-#' Introduce stepwise mutations to a microsatellite marker
+#' Introduce step wise mutations to a microsatellite marker
 #'
 #' @description This function is used to introduce mutations to microsatellite markers following a stepwise mutation model. Following this, the mutated allele will be either a repetition smaller or a repetition bigger than the wild type allele.
 #' @param y Integer. Number of repetitions of the allele.
@@ -25,7 +25,7 @@ mutmsat <- function(y,mutrate) {
 
 sim2genind <- function(x, ploidy) {
   temp_df <- as.data.frame(do.call(rbind,lapply(x,FUN = pastealleles)))
-  return(df2genind(temp_df,sep = ";",ploidy = ploidy))
+  return(adegenet::df2genind(temp_df,sep = ";",ploidy = ploidy))
 }
 
 #' Paste the alleles of an individual separated by a semicolon

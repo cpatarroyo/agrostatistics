@@ -6,9 +6,13 @@ Author: Camilo Patarroyo
 Maintainer: Camilo Patarroyo <ca.patarroyo960@uniandes.edu.co>
 Description: This package contains functions for two main tasks. The first is the prediction of variables of importance in agriculture such as the time to harvest, and the harvested amount depending on the environmental variables and agricultural practices.
     The second is the genetic analysis of populations of phytopathogens in the frame of environmental demogenetics, and appearance prediction.
-License: use_mit_license()
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: 
-  methods 
+  methods,
+  adegenet
 RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
