@@ -151,7 +151,7 @@ posRecomb <- function(x,elList) {
 #' @param mutrat Double. Mutation rate of the microsatellite loci.
 #' @param grid Integer vector. Dimensions of the spatial grid where the populations occurs.
 #' @param printAnc Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.
-#' @returns A Genind object containing the simulated population.
+#' @returns A named list with two slots. The \code{pop} slot that contains the Genind object containing the simulated population, and the \code{sexprop} slot that contains the proportion of sexual reproduction events in each generation.
 #' @export
 
 evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, grid=c(10,10), printAnc = FALSE) {
@@ -160,6 +160,10 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
   posmat <- matrix(1:prod(grid), nrow = grid[1], ncol = grid[2])
   tprobmat <-as.matrix(sapply(posmat,FUN = distmat,mat=posmat))
   probarray <- array(dim = c(grid[1],grid[2],prod(grid)))
+  #Create the vectors to store the amount of sexual and clonal reproduction events respectively
+  sexEvents <- vector()
+  clonEvents <- vector()
+
   for(i in 1:dim(tprobmat)[2]) {
     probarray[,,i] <- matrix(data = tprobmat[,i],nrow = grid[1], ncol = grid[2])
   }
@@ -183,10 +187,14 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
     temp <- list()
 
     #Add the individuals product of asexual reproduction
-    temp <- append(temp,unlist(lapply(population,FUN = asexrep)))
+    temp <- append(temp, unlist(lapply(sample(population, max(as.integer((1-sexprob)*length(population)),1)), FUN = asexrep)))
 
     #Displacement of the asexually produced offspring
     temp <- lapply(temp, FUN = displacement, position = posmat, probability = probarray)
+
+    #Record the clonal reproduction events for this generation and put a 0 placeholder for sexual reproduction events
+    clonEvents[gencnt] <- max(as.integer((1-sexprob)*length(population)),1)
+    sexEvents[gencnt] <- 0
 
     if(sexprob>0) {
 
@@ -203,8 +211,8 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
         #All possible pairings between individuals that are in the same quadrants are arranged
         pairings <- do.call(cbind,lapply(tempPairings,combn,m=2))
 
-        #From the possible pairings randomly select the fraction corresponding to the selected probability of sexual reproduction
-        pairings <- pairings[, sample(1:ncol(pairings), as.integer(sexprob*ncol(pairings)))]
+        #From the possible pairings randomly select the fraction corresponding to the probability of sexual reproduction for the population size
+        pairings <- pairings[, sample(1:ncol(pairings), as.integer(sexprob*length(population)), replace = TRUE)]
 
         if(!is.null(ncol(pairings))) {
           if(ncol(pairings)>0) {
@@ -216,11 +224,13 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
 
             #Create the individuals with the recombinant genotypes and add them to the population
             temp <- append(temp,apply(tempRecomb,MARGIN = 2,FUN = addinds, mrows = ploidy))
+
+            #Record the amount of sexual reproduction events that occurred in the current generation
+            sexEvents[gencnt] <- ncol(pairings)
           }
         }
       }
     }
-
     population <- temp
 
     #Introduce the mutations
@@ -235,7 +245,8 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
     print(genmemory)
   }
 
-  #Return the created population as a genind object
-  return(sim2genind(population, ploidy = ploidy))
+  #Return a list with a pop slot containing the created population as a genind object and the sexprop that contains the proportion of sexual reproduction events
+  results <- list(pop = sim2genind(population, ploidy = ploidy), sexprop = sexevents/(sexevents+clonevents))
+  return(results)
 }
 

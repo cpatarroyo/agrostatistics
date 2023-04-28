@@ -33,7 +33,7 @@ evoSim_se(
 \item{printAnc}{Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.}
 }
 \value{
-A Genind object containing the simulated population.
+A named list with two slots. The \code{pop} slot that contains the Genind object containing the simulated population, and the \code{sexprop} slot that contains the proportion of sexual reproduction events in each generation.
 }
 \description{
 This function performs a spatially explicit evolutionary simulation of a population with mixed reproduction.
