@@ -8,6 +8,8 @@ sim2genind(x, ploidy)
 }
 \arguments{
 \item{x}{List of objects of the class "indiv" produced during the evolutionary simulation.}
+
+\item{ploidy}{Integer. Ploidy level of the individuals in the simualted population.}
 }
 \value{
 Genind of the individuals of the list produced during the simulation.

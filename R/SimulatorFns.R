@@ -11,6 +11,7 @@ setClass("indiv",slots = list(micro="matrix",pos="integer"))
 #'
 #' @description This function is used to introduce mutations to microsatellite markers following a stepwise mutation model. Following this, the mutated allele will be either a repetition smaller or a repetition bigger than the wild type allele.
 #' @param y Integer. Number of repetitions of the allele.
+#' @importFrom stats rbinom
 #' @param mutrate Double. This is the mutation rate for the locus.
 
 mutmsat <- function(y,mutrate) {
@@ -21,6 +22,8 @@ mutmsat <- function(y,mutrate) {
 #'
 #' @description This function converts a simulated population into a Genind object. This in order to facilitate the calculation of diversity statistics using the poppr package.
 #' @param x List of objects of the class "indiv" produced during the evolutionary simulation.
+#' @param ploidy Integer. Ploidy level of the individuals in the simualted population.
+#' @importFrom adegenet df2genind
 #' @returns Genind of the individuals of the list produced during the simulation.
 
 sim2genind <- function(x, ploidy) {
@@ -76,6 +79,7 @@ recombination <- function(x,size,poplist) {
 #' @description This function takes a matrix of microsatellite loci and creates an "indiv" object with this information.
 #' @param x Matrix with the microsatellite repetition data.
 #' @param mrows Ploidy level of the population.
+#' @importFrom methods new
 
 addinds <- function(x,mrows) {
   new("indiv",micro=matrix(data=x[1:(length(x)-1)],nrow = mrows),pos=as.integer(x[length(x)]))
@@ -97,6 +101,7 @@ insMutations <- function(x,mutationRate) {
 #' @description This functions returns the cumulative probability of dispersal from the quadrant x to the quadrant y. This function uses a normal probability distribution with mu = 0 and sigma = 3.
 #' @param x Origin of the displacement.
 #' @param y Arrival of the displacement.
+#' @importFrom stats dnorm
 #' @returns Cumulative probability of arrival from x to y given a normal probability distribution.
 
 eucprob <- function(x,y) {
@@ -151,6 +156,9 @@ posRecomb <- function(x,elList) {
 #' @param mutrat Double. Mutation rate of the microsatellite loci.
 #' @param grid Integer vector. Dimensions of the spatial grid where the populations occurs.
 #' @param printAnc Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.
+#' @importFrom stats rbinom
+#' @importFrom stats runif
+#' @importFrom utils combn
 #' @returns A named list with two slots. The \code{pop} slot that contains the Genind object containing the simulated population, and the \code{sexprop} slot that contains the proportion of sexual reproduction events in each generation.
 #' @export
 
