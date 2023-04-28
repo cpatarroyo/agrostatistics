@@ -246,7 +246,7 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
   }
 
   #Return a list with a pop slot containing the created population as a genind object and the sexprop that contains the proportion of sexual reproduction events
-  results <- list(pop = sim2genind(population, ploidy = ploidy), sexprop = sexevents/(sexevents+clonevents))
+  results <- list(pop = sim2genind(population, ploidy = ploidy), sexprop = sexEvents/(sexEvents+clonEvents))
   return(results)
 }
 
