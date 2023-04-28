@@ -160,6 +160,9 @@ posRecomb <- function(x,elList) {
 #' @importFrom stats runif
 #' @importFrom utils combn
 #' @returns A named list with two slots. The \code{pop} slot that contains the Genind object containing the simulated population, and the \code{sexprop} slot that contains the proportion of sexual reproduction events in each generation.
+#' @examples
+#' # Simulate a testing population.
+#' population <- evoSim_se(n=10, msat=10, gen=100, ploidy=3, sexprob=0.2, mutrat=0.001, grid=c(3,3))
 #' @export
 
 evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, grid=c(10,10), printAnc = FALSE) {
