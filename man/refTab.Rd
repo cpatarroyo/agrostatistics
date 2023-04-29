@@ -17,6 +17,20 @@ refTab(
 }
 \arguments{
 \item{x}{Element of a vector or list of values for the probability of sexual reproduction.}
+
+\item{pop_number}{Integer. Number of individuals per population per population.}
+
+\item{generations}{Integer. Number of generations to be simulated for each population.}
+
+\item{ploidy}{Integer. Ploidy level of the individuals in the simulated populations.}
+
+\item{loci}{Integer. Amount of microsatellite loci to be simulated for each individual.}
+
+\item{mutation_r}{Double. Rate of mutation for the microsatellite loci.}
+
+\item{spgrid}{Int vector. Vector of two values indicating the size of the spatial grid where the simulations take place.}
+
+\item{sample_size}{Passed on to the \code{evoSim_se} function. Individuals to be sampled to calculate the summary statistics. If \code{sample_size} is more than \code{pop_number}, all individuals will be used for the calculations.}
 }
 \value{
 List of the given probability of sexual reproduction, the proportion of sexual reproduction events, and the summary statistics for each simulated population.

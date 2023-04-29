@@ -11,7 +11,7 @@
 power_law_beta <- function(x){
   xpow <- poweRlaw::displ(x[x > 0])           # Generate the distribution
   xpow$setPars(poweRlaw::estimate_pars(xpow)) # Estimate the parameters
-  xdat <- plot(xpow, draw = FALSE)            # Extract the data
+  xdat <- data.frame(x=xpow$internal$values, y= xpow$internal$cum_n/max(xpow$internal$cum_n)) # Extract the data
   xlm <- lm(log(y) ~ log(x), data = xdat)     # Run log-log linear model for slope
   return(-coef(xlm)[2])
 }
@@ -37,6 +37,13 @@ Beta <- function(x){
 #' @description This function is a wrapper to implement the simulation and summarizing of the populations pooled for the ABC inference of the proportion of sexual reproduction.
 #' This allows to take advantage of the multi-core execution available from the \code{parallel} R package to make the production of a reference table more efficient.
 #' @param x Element of a vector or list of values for the probability of sexual reproduction.
+#' @param pop_number Integer. Number of individuals per population per population.
+#' @param generations Integer. Number of generations to be simulated for each population.
+#' @param ploidy Integer. Ploidy level of the individuals in the simulated populations.
+#' @param loci Integer. Amount of microsatellite loci to be simulated for each individual.
+#' @param mutation_r Double. Rate of mutation for the microsatellite loci.
+#' @param spgrid Int vector. Vector of two values indicating the size of the spatial grid where the simulations take place.
+#' @param sample_size Passed on to the \code{evoSim_se} function. Individuals to be sampled to calculate the summary statistics. If \code{sample_size} is more than \code{pop_number}, all individuals will be used for the calculations.
 #' @importFrom poppr poppr
 #' @importFrom poppr mlg.table
 #' @return List of the given probability of sexual reproduction, the proportion of sexual reproduction events, and the summary statistics for each simulated population.
