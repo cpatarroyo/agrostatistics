@@ -6,6 +6,9 @@
 \usage{
 power_law_beta(x)
 }
+\arguments{
+\item{x}{Value used to generate the Pareto distribution}
+}
 \value{
 Returns the negative slope of the Pareto distribution
 }

@@ -6,6 +6,9 @@
 \usage{
 Beta(x)
 }
+\arguments{
+\item{x}{Abundance of a particular genotype.}
+}
 \value{
 Negative slope of the Pareto distribution from a genotype table.
 }

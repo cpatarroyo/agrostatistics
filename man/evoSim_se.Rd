@@ -12,7 +12,8 @@ evoSim_se(
   sexprob = 0.5,
   mutrat = 0.001,
   grid = c(10, 10),
-  printAnc = FALSE
+  printAnc = FALSE,
+  sample_size = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ evoSim_se(
 \item{grid}{Integer vector. Dimensions of the spatial grid where the populations occurs.}
 
 \item{printAnc}{Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.}
+
+\item{sample_size}{Integer. Default value \code{NULL}. If a value is given, a random sample of size \code{sample_size} is taken from the simulated population and the summary statistics are calculated from the random sample. If it is \code{NULL} all the individuals from the simulated population are used for the calculation of the summary statistics.}
 }
 \value{
 A named list with two slots. The \code{pop} slot that contains the Genind object containing the simulated population, and the \code{sexprop} slot that contains the proportion of sexual reproduction events in each generation.

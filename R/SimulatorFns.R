@@ -156,6 +156,7 @@ posRecomb <- function(x,elList) {
 #' @param mutrat Double. Mutation rate of the microsatellite loci.
 #' @param grid Integer vector. Dimensions of the spatial grid where the populations occurs.
 #' @param printAnc Boolean. If \code{TRUE} the genotype of the first individual created will be printed at the end of the simulation.
+#' @param sample_size Integer. Default value \code{NULL}. If a value is given, a random sample of size \code{sample_size} is taken from the simulated population and the summary statistics are calculated from the random sample. If it is \code{NULL} all the individuals from the simulated population are used for the calculation of the summary statistics.
 #' @importFrom stats rbinom
 #' @importFrom stats runif
 #' @importFrom utils combn
@@ -165,7 +166,7 @@ posRecomb <- function(x,elList) {
 #' population <- evoSim_se(n=10, msat=10, gen=100, ploidy=3, sexprob=0.2, mutrat=0.001, grid=c(3,3))
 #' @export
 
-evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, grid=c(10,10), printAnc = FALSE) {
+evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, grid=c(10,10), printAnc=FALSE, sample_size=NULL) {
 
   #Create the position grid and the dispersal kernel
   posmat <- matrix(1:prod(grid), nrow = grid[1], ncol = grid[2])
@@ -256,8 +257,15 @@ evoSim_se<-function(n=100,msat=10,gen=100,ploidy=1,sexprob=0.5, mutrat = 0.001, 
     print(genmemory)
   }
 
+  if(is.null(sample_size)) {
+    temp_pop_res <- sim2genind(population, ploidy = ploidy)
+  }
+  else {
+    temp_pop_res <- sim2genind(sample(population, min(sample_size,length(population))), ploidy = ploidy)
+  }
+
   #Return a list with a pop slot containing the created population as a genind object and the sexprop that contains the proportion of sexual reproduction events
-  results <- list(pop = sim2genind(population, ploidy = ploidy), sexprop = sexEvents/(sexEvents+clonEvents))
+  results <- list(pop = temp_pop_res, sexprop = sexEvents/(sexEvents+clonEvents))
   return(results)
 }
 
