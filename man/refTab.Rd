@@ -4,7 +4,16 @@
 \alias{refTab}
 \title{Function used to generate a reference table from multiple simulations.}
 \usage{
-refTab(x)
+refTab(
+  x,
+  pop_number,
+  generations,
+  ploidy,
+  loci,
+  mutation_r,
+  spgrid,
+  sample_size
+)
 }
 \arguments{
 \item{x}{Element of a vector or list of values for the probability of sexual reproduction.}

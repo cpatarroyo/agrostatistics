@@ -12,9 +12,9 @@ LazyData: true
 Imports: 
   methods,
   adegenet,
-  poweRlaw,
   poppr,
-  parallel
+  parallel,
+  poweRlaw
 RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)

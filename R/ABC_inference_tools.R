@@ -41,7 +41,7 @@ Beta <- function(x){
 #' @importFrom poppr mlg.table
 #' @return List of the given probability of sexual reproduction, the proportion of sexual reproduction events, and the summary statistics for each simulated population.
 
-refTab <- function(x) {
+refTab <- function(x, pop_number, generations, ploidy, loci, mutation_r, spgrid, sample_size) {
   tempop <- evoSim_se(sexprob = x, n=pop_number, gen=generations, ploidy = ploidy, msat = loci, mutrat = mutation_r, grid=spgrid, sample_size = sample_size)
   response <- as.numeric(c(x,mean(tempop$sexprop) ,as.numeric(unlist(poppr::poppr(tempop$pop)[,6:12])), Beta(poppr::mlg.table(tempop$pop,plot = FALSE))))
   return(response)
@@ -77,7 +77,7 @@ makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000,
     cores <- parallel::detectCores()
   }
 
-  results <- parallel::mclapply(probvec, FUN=refTab, mc.cores = cores)
+  results <- parallel::mclapply(probvec, FUN=refTab, mc.cores = cores, pop_number = pop_number, generations = generations, ploidy = ploidy, loci = loci, mutation_r = mutation_r, spgrid = spgrid, sample_size = sample_size)
   tempResults <- as.data.frame(matrix(unlist(results),ncol = 10, byrow = TRUE))
   colnames(tempResults) <- c("Prob", "SexRate","H","G","lambda","E.5","Hexp", "Ia", "rbarD","Pareto")
 
