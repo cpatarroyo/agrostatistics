@@ -98,3 +98,32 @@ makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000,
 
   write.csv(tempResults, file=paste("./",file_name,"/",file_name,nameCount,".csv", sep = ""), row.names=FALSE)
 }
+
+#' Function to reunite the different parts of the reference table obtained in different runs
+#'
+#' @description
+#' Due to the computation intensive nature of the simulations required for the ABC inference, the simulations might be done in several different runs. This function allows to easily combine the parts of a reference table for an inference obtained in different runs.
+#' @param folder Boolean. Default `TRUE`. If `TRUE` the function will combine all parts in the folder specified in `fpath`. If `FALSE`, all files whose name contain `fpath` are combined into the reference table. Used in case the reference table parts are in the same working directory.
+#' @param fpath String. Name of the folder that contains the parts of the reference table. If `folder` is `FALSE` then is the pattern (or common string) of the names of the parts of the reference table.
+#' @returns Reference table containing the parameter values and the summary statistics of all the simulations done in different runs.
+#' @importFrom utils read.csv
+#' @export
+
+refTabComp <- function(fpath, folder = TRUE) {
+
+  reftable <- data.frame()
+
+  if(folder) {
+    tempath <- paste("./",fpath, "/", sep = "")
+    for(part in list.files(tempath)) {
+      reftable <- rbind(reftable, read.csv(paste(tempath,part,sep = ""), header = TRUE))
+    }
+  }
+  else {
+    tempFlist <- list.files(pattern = fpath)
+    for(part in tempFlist) {
+      reftable <- rbind(reftable, read.csv(paste("./",part,sep = ""), header = TRUE))
+    }
+  }
+  return(reftable)
+}

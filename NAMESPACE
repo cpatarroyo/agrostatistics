@@ -2,6 +2,7 @@
 
 export(evoSim_se)
 export(makeRefTable)
+export(refTabComp)
 exportClasses(indiv)
 importFrom(adegenet,df2genind)
 importFrom(methods,new)
@@ -15,4 +16,5 @@ importFrom(stats,lm)
 importFrom(stats,rbinom)
 importFrom(stats,runif)
 importFrom(utils,combn)
+importFrom(utils,read.csv)
 importFrom(utils,write.csv)
