@@ -8,6 +8,14 @@ This approximation is applicable to polyploid populations sampled in a single ti
 [^2]: Beaumont, M. A., Zhang, W., & Balding, D. J. (2002). Approximate Bayesian Computation in Population Genetics. Genetics, 162(4), 2025–2035. https://doi.org/10.1093/genetics/162.4.2025.
 [^3]: R Core Team (2023). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
 
+### Instalation
+
+To install this package use: 
+```
+install.packages("devtools")
+devtools::install_github("cpatarroyo/agrostatistics")
+```
+
 ### Recomendations
 As with most ABC applications, the typical pipeline for the inference of the sexual reproduction rate in a real population includes two main steps:
 1. Simulation of populations and calculation of the summary statistics. 
@@ -18,5 +26,3 @@ The first step is the most computationally demanding process in the workflow. Th
 **Warning**: Windows does not support multi-core execution using the `parallel` package. 
 
 On the other hand, the inference of the probability and the cross-validation take a few minutes to execute. 
-
-## Workflow example
