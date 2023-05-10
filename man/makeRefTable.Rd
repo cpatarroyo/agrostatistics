@@ -12,7 +12,7 @@ makeRefTable(
   ploidy = 1,
   loci = 10,
   mutation_r = 0.001,
-  file_name = "reftable.csv",
+  file_name = NULL,
   spgrid = c(10, 10),
   cores = NULL
 )
@@ -32,7 +32,7 @@ makeRefTable(
 
 \item{mutation_r}{Double. Passed on to the \code{evoSim_se} function. Mutation rate of the microsatellite markers.}
 
-\item{file_name}{String. Name of the file to be created to store the reference table.}
+\item{file_name}{String. Name of the folder to be created to store the parts of the reference table.}
 
 \item{spgrid}{Int vector. Passed on to the \code{evoSim_se} function. The dimensions of the spatial grid where the populations are simulated.}
 

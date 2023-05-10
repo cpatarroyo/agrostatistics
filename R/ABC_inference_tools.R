@@ -69,16 +69,19 @@ refTab <- function(x, pop_number, generations, ploidy, loci, mutation_r, spgrid,
 #' @param loci Integer. Passed on to the \code{evoSim_se} function. Number of microsatellite loci to be simulated for each individual in the population.
 #' @param mutation_r Double. Passed on to the \code{evoSim_se} function. Mutation rate of the microsatellite markers.
 #' @param spgrid Int vector. Passed on to the \code{evoSim_se} function. The dimensions of the spatial grid where the populations are simulated.
-#' @param file_name String. Name of the file to be created to store the reference table.
+#' @param file_name String. Name of the folder to be created to store the parts of the reference table.
 #' @param cores Integer. Amount of parallel cores to run the simulations. **Warning** Windows does not support multi-core execution, so to run this function in Windows the `cores` parameter should be set to 1.
 #' @importFrom utils write.csv
 #' @export
 #' @returns This function does not return a value. It writes out the reference table using the name given in `file_name` to the working directory.
 
-makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000, ploidy=1, loci=10, mutation_r=0.001, file_name="reftable.csv", spgrid=c(10,10), cores=NULL) {
+makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000, ploidy=1, loci=10, mutation_r=0.001, file_name=NULL, spgrid=c(10,10), cores=NULL) {
 
   #Create the vector of probability values for the simulations
   probvec <- runif(N, min=0, max=1)
+
+  #Create the folder to store the
+  tryCatch({dir.create(file_name, showWarnings = FALSE) }, error=function(cond) { stop("You need to provide a folder name!") } )
 
   if(is.null(cores)) {
     cores <- parallel::detectCores()
@@ -89,10 +92,9 @@ makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000,
   colnames(tempResults) <- c("Prob", "SexRate","H","G","lambda","E.5","Hexp", "Ia", "rbarD","Pareto")
 
   nameCount <- 0
-  while(file.exists(file_name)) {
+  while(file.exists(paste(file_name,nameCount,".csv", sep = ""))) {
     nameCount <- nameCount + 1
-    file_name <- sub('.csv', paste(nameCount,'csv', sep = "."),file_name)
   }
 
-  write.csv(tempResults, file=file_name, row.names=FALSE)
+  write.csv(tempResults, file=paste("./",file_name,"/",file_name,nameCount,".csv", sep = ""), row.names=FALSE)
 }
