@@ -92,7 +92,7 @@ makeRefTable <- function(N, pop_number=100, sample_size=NULL, generations=10000,
   colnames(tempResults) <- c("Prob", "SexRate","H","G","lambda","E.5","Hexp", "Ia", "rbarD","Pareto")
 
   nameCount <- 0
-  while(file.exists(paste(file_name,nameCount,".csv", sep = ""))) {
+  while(file.exists(paste("./",file_name,"/",file_name,nameCount,".csv", sep = ""))) {
     nameCount <- nameCount + 1
   }
 
