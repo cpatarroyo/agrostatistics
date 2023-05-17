@@ -9,7 +9,7 @@ summaryStats(population, ploidy, sumStats = c("lambda", "rbarD", "Pareto"))
 \arguments{
 \item{population}{The population used to calculate the summary statistics. This can be the path to a Genalex formatted .csv file, or an object of the classes genind, genclone, structure, genetix or genpop (see \link[poppr]{poppr} for details)}
 
-\item{ploidy}{Integer. The ploidy level of the population. Required **only** when a path to a Genalex .csv file is used.}
+\item{ploidy}{Integer. The ploidy level of the population. Required only when a path to a Genalex .csv file is used.}
 
 \item{sumStats}{Vector. The names of the summary statistics to be calculated of the population.}
 }
@@ -17,16 +17,16 @@ summaryStats(population, ploidy, sumStats = c("lambda", "rbarD", "Pareto"))
 Named vector containing the values for the summary statistics specified in the function call.
 }
 \description{
-This function calculates the selected summary statistics from a population. **Warning**: Because the ABC inference of the sexual reproduction rate can be done on one population at a time, the sub-population strata will be ignored and the population given will be treated as a single population. The available summary statistics are:
-- `MLG`: The number of multi-loci genotypes
-- `eMLG`: The expected number of MLGs
-- `H`: The Shannon-Weiner Diversity index
-- `G`: The Stoddard and Taylor's Index
-- `lambda`: The Simpson's index
-- `E.5`: The evenness
-- `Hexp`: Nei's gene diversity (expected heterozygosity)
-- `Ia`: A numeric vector giving the value of the Index of Association for each population factor
-- `rbarD`: A numeric vector giving the value of the Standardized Index of Association for each population factor
-As implemented by the \link[poppr]{poppr}
-- `Pareto`: The &beta; Pareto coefficient for the MLG distribution
+This function calculates the selected summary statistics from a population. Warning because the ABC inference of the sexual reproduction rate can be done on one population at a time, the sub-population strata will be ignored and the population given will be treated as a single population. The available summary statistics are:
+
+The number of multi-loci genotypes `MLG`,
+the expected number of MLGs `eMLG`, the Shannon-Weiner Diversity index `H`,
+the Stoddard and Taylor's Index `G`,
+the Simpson's index `lambda`,
+the evenness `E.5`,
+Nei's gene diversity (expected heterozygosity) `Hexp`,
+a numeric vector giving the value of the Index of Association for each population factor `Ia`,
+a numeric vector giving the value of the Standardized Index of Association for each population factor `rbarD`,
+as implemented by the \link[poppr]{poppr};
+and the beta Pareto coefficient for the MLG distribution `Pareto`.
 }
