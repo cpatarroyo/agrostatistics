@@ -127,3 +127,100 @@ refTabComp <- function(fpath, folder = TRUE) {
   }
   return(reftable)
 }
+
+#' Function to calculate the summary statistics from the population
+#' @description
+#' This function calculates the selected summary statistics from a population. **Warning**: Because the ABC inference of the sexual reproduction rate can be done on one population at a time, the sub-population strata will be ignored and the population given will be treated as a single population. The available summary statistics are:
+#' - `MLG`: The number of multi-loci genotypes
+#' - `eMLG`: The expected number of MLGs
+#' - `H`: The Shannon-Weiner Diversity index
+#' - `G`: The Stoddard and Taylor's Index
+#' - `lambda`: The Simpson's index
+#' - `E.5`: The evenness
+#' - `Hexp`: Nei's gene diversity (expected heterozygosity)
+#' - `Ia`: A numeric vector giving the value of the Index of Association for each population factor
+#' - `rbarD`: A numeric vector giving the value of the Standardized Index of Association for each population factor
+#' As implemented by the \link[poppr]{poppr}
+#' - `Pareto`: The &beta; Pareto coefficient for the MLG distribution
+#' @param population The population used to calculate the summary statistics. This can be the path to a Genalex formatted .csv file, or an object of the classes genind, genclone, structure, genetix or genpop (see \link[poppr]{poppr} for details)
+#' @param ploidy Integer. The ploidy level of the population. Required **only** when a path to a Genalex .csv file is used.
+#' @param sumStats Vector. The names of the summary statistics to be calculated of the population.
+#' @returns Named vector containing the values for the summary statistics specified in the function call.
+#' @importFrom poppr read.genalex
+#' @importFrom poppr poppr
+#' @importFrom adegenet pop
+#' @importFrom methods is
+#' @export
+
+summaryStats <- function(population, ploidy, sumStats = c("lambda", "rbarD","Pareto")) {
+
+  if(is(population,"character")) {
+    tryCatch({ realPop <- poppr::read.genalex(population, ploidy = ploidy) }, error=function(cond) { stop("Please make sure you provide a valid path, you enetered the ploidy level and make sure your file is correctly formatted") })
+  }
+  else {
+    realPop <- population
+  }
+
+  adegenet::pop(realPop) <- rep("Pop1",summary(realPop)$n)
+  parInd <- which(sumStats == 'Pareto')
+
+  if(length(parInd)) {
+    popStats <- sumStats[-parInd]
+    tryCatch({ popSumStats <- poppr::poppr(realPop)[popStats] }, error=function(cond) { stop("Please make sure you entered a valid population object") })
+    popSumStats <- cbind(popSumStats, Beta(mlg.table(realPop, quiet = TRUE, plot = FALSE)))
+    colnames(popSumStats) <- c(popStats,"Pareto")
+  }
+  else {
+    tryCatch({ popSumStats <- poppr::poppr(realPop)[popStats] }, error=function(cond) { stop("Please make sure you entered a valid population object") })
+    colnames(popSumStats) <- sumStats
+  }
+
+  rownames(popSumStats) <- 1:dim(popSumStats)[1]
+
+  return(popSumStats)
+
+}
+
+#' Wrapper to apply the cross validation for ABC
+#' @description
+#' This function is a wrapper to facilitate the use of the cross validation for approximate Bayesian Computation using the package `abc`. For more details see \link[abc]{cv4abc}
+#' @param refTable `data.frame`. The reference table from the simulated populations.
+#' @param sumStats Vector. Selected summary statistics.
+#' @param ... Additional parameters to be passed to \link[abc]{cv4abc}.
+#' @importFrom abc cv4abc
+#' @returns An object of class \link[abc]{cv4abc}
+#' @export
+
+cv4abcAS <- function(refTable, sumStats = c("lambda", "rbarD","Pareto"), ...) {
+
+  refParam <- data.frame(SexProb = refTable$SexRate)
+  paramSS <- refTable[,sumStats]
+
+  result <- abc::cv4abc(param = refParam, sumstat = paramSS, ...)
+
+  return(result)
+
+}
+
+#' Wrapper to apply the ABC parameter inference
+#' @description
+#' This function is a wrapper to facilitate the use inference of the sexual reproduction rate using approximate Bayesian Computation implemented in the package `abc`. For more details see \link[abc]{abc}
+#' @param population The population to infer the sexual reproduction rate. This can be the path to a Genalex formatted .csv file, or an object of the classes genind, genclone, structure, genetix or genpop (see \link[poppr]{poppr} for details)
+#' @param ploidy Integer. The ploidy level of the population. Required **only** when a path to a Genalex .csv file is used.
+#' @param refTable data.frame. The data frame containing the reference table of the simulated populations.
+#' @param sumStats Vector. The names of the summary statistics to be calculated of the population.
+#' @param ... Additional parameters to be passed to \link[abc]{abc}.
+#' @importFrom abc abc
+#' @returns Returns an object of class \link[abc]{abc}.
+#' @export
+
+abcAS <- function(population, ploidy, refTable, sumStats = c("lambda", "rbarD","Pareto"), ...) {
+
+  rpSS <- summaryStats(population, ploidy, sumStats = sumStats)
+  refParam <- data.frame(SexProb = refTable$SexRate)
+  paramSS <- refTable[,sumStats]
+
+  results <- abc::abc(target = rpSS, param = refParam, sumstat = paramSS, ...)
+  return(results)
+
+}

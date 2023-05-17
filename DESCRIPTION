@@ -14,7 +14,8 @@ Imports:
   adegenet,
   poppr,
   parallel,
-  poweRlaw
+  poweRlaw,
+  abc
 RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)
