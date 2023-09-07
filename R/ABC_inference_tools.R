@@ -161,7 +161,7 @@ summaryStats <- function(population, ploidy, sumStats = c("lambda", "rbarD","Par
     realPop <- population
   }
 
-  adegenet::pop(realPop) <- rep("Pop1",summary(realPop)$n)
+  adegenet::pop(realPop) <- rep("Pop1",summary(realPop)[['n']])
   parInd <- which(sumStats == 'Pareto')
 
   if(length(parInd)) {
