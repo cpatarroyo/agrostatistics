@@ -150,6 +150,7 @@ refTabComp <- function(fpath, folder = TRUE) {
 #' @importFrom poppr poppr
 #' @importFrom adegenet pop
 #' @importFrom methods is
+#' @importFrom adegenet summary
 #' @export
 
 summaryStats <- function(population, ploidy, sumStats = c("lambda", "rbarD","Pareto")) {
