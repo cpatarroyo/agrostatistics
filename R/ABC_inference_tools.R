@@ -116,13 +116,21 @@ refTabComp <- function(fpath, folder = TRUE) {
   if(folder) {
     tempath <- paste("./",fpath, "/", sep = "")
     for(part in list.files(tempath)) {
-      reftable <- rbind(reftable, read.csv(paste(tempath,part,sep = ""), header = TRUE))
+      temptable <- read.csv(paste(tempath,part,sep = ""), header = TRUE)
+      if("X" %in% colnames(temptable)) {
+        temptable <- temptable[,-which(colnames(temptable) == "X")]
+      }
+      reftable <- rbind(reftable, temptable)
     }
   }
   else {
     tempFlist <- list.files(pattern = fpath)
     for(part in tempFlist) {
-      reftable <- rbind(reftable, read.csv(paste("./",part,sep = ""), header = TRUE))
+      temptable <- read.csv(paste("./",part,sep = ""), header = TRUE)
+      if("X" %in% colnames(temptable)) {
+        temptable <- temptable[,-which(colnames(temptable) == "X")]
+      }
+      reftable <- rbind(reftable, temptable)
     }
   }
   return(reftable)
