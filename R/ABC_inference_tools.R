@@ -180,7 +180,7 @@ summaryStats <- function(population, ploidy, sumStats = c("lambda", "rbarD","Par
     colnames(popSumStats) <- c(popStats,"Pareto")
   }
   else {
-    tryCatch({ popSumStats <- poppr::poppr(realPop)[popStats] }, error=function(cond) { stop("Please make sure you entered a valid population object") })
+    tryCatch({ popSumStats <- poppr::poppr(realPop)[sumStats] }, error=function(cond) { stop("Please make sure you entered a valid population object") })
     colnames(popSumStats) <- sumStats
   }
 
